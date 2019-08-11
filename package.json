@@ -11,11 +11,18 @@
     "clarifai": "^2.9.0",
     "expo": "^34.0.1",
     "expo-camera": "^6.0.0",
+    "expo-constants": "^6.0.0",
     "expo-image-manipulator": "^6.0.0",
+    "expo-image-picker": "^6.0.0",
     "expo-permissions": "^6.0.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-easy-grid": "^0.2.1",
+    "react-native-elements": "^1.1.0",
+    "react-native-image-zoom-viewer": "^2.2.26",
+    "react-native-power-translator": "^1.1.1",
+    "react-native-swipe-close-image": "^1.0.7",
     "react-native-web": "^0.11.4"
   },
   "devDependencies": {

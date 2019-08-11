@@ -1,8 +1,32 @@
+/* eslint-disable no-alert */
 import React from 'react';
-import { FlatList, Text, View, TouchableOpacity } from 'react-native';
+import {
+  FlatList,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  StatusBar,
+} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { Ionicons } from '@expo/vector-icons';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import { ListItem } from 'react-native-elements';
+import {
+  PowerTranslator,
+  ProviderTypes,
+  TranslatorConfiguration,
+  TranslatorFactory,
+} from 'react-native-power-translator';
+
+// import SwipeCloseImage from 'react-native-swipe-close-image';
+
+import styles from './styles';
 
 const Clarifai = require('clarifai');
 
@@ -11,11 +35,16 @@ const clarifai = new Clarifai.App({
 });
 process.nextTick = setImmediate;
 
+const key = {};
+
 export default class CameraExample extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
     predictions: [],
+    chosenImage: null,
+    language: null,
+    output: null,
   };
 
   async componentDidMount() {
@@ -46,78 +75,202 @@ export default class CameraExample extends React.Component {
   };
   objectDetection = async () => {
     let photo = await this.capturePhoto();
-    console.log(photo);
     let resized = await this.resize(photo);
     let predictions = await this.predict(resized);
+
+    console.log(photo);
+    this.setState({ chosenImage: photo });
     this.setState({ predictions: predictions.outputs[0].data.concepts });
+
+    // const textToTranslate = predictions.outputs[0].data.concepts.join();
+    // this.setState({ output: output });
+  };
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  };
+
+  // Function for camera roll
+  _pickImage = async () => {
+    this.getPermissionAsync();
+    let selectedImage = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (!selectedImage.cancelled) {
+      this.setState({ chosenImage: selectedImage.uri });
+      let resized = await this.resize(selectedImage.uri);
+      let predictions = await this.predict(resized);
+
+      console.log(selectedImage.uri);
+
+      this.setState({ predictions: predictions.outputs[0].data.concepts });
+    }
+  };
+
+  closeWindow = () => {
+    this.setState({
+      chosenImage: null,
+    });
   };
 
   render() {
+    TranslatorConfiguration.setConfig(
+      ProviderTypes.Google,
+      'AIzaSyB5ip6KC-9KCIjO9Q7Rm47dYJDmOdjLgM0',
+      'fr'
+    );
+
     const { hasCameraPermission, predictions } = this.state;
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
+      return (
+        <View
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <StatusBar hidden={true} />
+          <Text>No access to camera</Text>
+        </View>
+      );
     } else {
       return (
         <View style={{ flex: 1 }}>
           {/* Added ref */}
-          <Camera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            style={{ flex: 1 }}
-            type={this.state.type}
-          >
-            {/* Switched to flexDirection 'column', added justifyContent:  */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
+          <StatusBar hidden={true} />
+          {!this.state.chosenImage && (
+            <Camera
+              ref={ref => {
+                this.camera = ref;
               }}
+              style={{ flex: 1 }}
+              type={this.state.type}
             >
-              {/* Added to component */}
               <View
                 style={{
                   flex: 1,
-                  alignSelf: 'flex-start',
-                  alignItems: 'center',
+                  backgroundColor: 'transparent',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
                 }}
               >
-                <FlatList
-                  data={predictions.map(prediction => ({
-                    key: `${prediction.name} ${prediction.value}`,
-                  }))}
-                  renderItem={({ item }) => (
-                    <Text
-                      style={{ paddingLeft: 15, color: 'white', fontSize: 20 }}
-                    >
-                      {item.key}
-                    </Text>
-                  )}
-                />
+                {/* bottom toolbar */}
+                <Grid style={styles.bottomToolbar}>
+                  <Row>
+                    <Col style={styles.alignCenter}>
+                      <TouchableOpacity>
+                        <Ionicons
+                          onPress={this._pickImage}
+                          name="ios-photos"
+                          color="white"
+                          size={55}
+                        />
+                      </TouchableOpacity>
+                    </Col>
+                    <Col size={2} style={styles.alignCenter}>
+                      <TouchableOpacity>
+                        <Ionicons
+                          onPress={this.objectDetection}
+                          name="ios-camera"
+                          color="white"
+                          size={90}
+                        />
+                      </TouchableOpacity>
+                    </Col>
+                    <Col style={styles.alignCenter}>
+                      <TouchableOpacity>
+                        <Ionicons
+                          name="md-reverse-camera"
+                          color="white"
+                          size={55}
+                        />
+                      </TouchableOpacity>
+                    </Col>
+                  </Row>
+                </Grid>
               </View>
+            </Camera>
+          )}
 
-              {/* Removed alignedSelf, Added background Color and height   */}
-              <TouchableOpacity
+          {this.state.chosenImage && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* <TouchableWithoutFeedback onPress={this.onPressImage}>
+                <Image
+                  ref={c => {
+                    this.imageRef = c;
+                  }}
+                  source={{ uri: this.state.chosenImage }}
+                  style={{ width: 300, height: 300 }}
+                  resizeMode="contain"
+                />
+              </TouchableWithoutFeedback>
+
+              <SwipeCloseImage
+                // eslint-disable-next-line no-return-assign
+                ref={c => (this.swipeToCloseRef = c)}
+                imageSource={this.state.chosenImage}
+              /> */}
+
+              <PowerTranslator
+                text={'A Confucian Revival Began'}
+              />
+              <PowerTranslator
+                text={'Author: Confucianism'}
+              />
+
+              <FlatList
                 style={{
-                  flex: 0.1,
-                  alignItems: 'center',
-                  backgroundColor: 'blue',
-                  height: '10%',
+                  flex: 1,
+                  textAlign: 'center',
+                  marginTop: '2%',
                 }}
-                // Removed stuff after onPress
-                onPress={this.objectDetection}
-              >
-                {/* Changed the styles */}
-                <Text style={{ fontSize: 30, color: 'white', padding: 15 }}>
-                  {/* deleted Flip */} Detect Objects{' '}
-                </Text>
+                data={
+                  predictions.map((prediction, i) => ({
+                    key: `${prediction.name.charAt(0).toUpperCase() +
+                      prediction.name.slice(1)}:
+
+                    `,
+                  }))
+                  // ${(prediction.value * 100).toFixed(1)}%`}
+                }
+                renderItem={({ item }) => (
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.key}
+                  </Text>
+                )}
+              />
+
+              <TouchableOpacity>
+                <Ionicons
+                  onPress={this.closeWindow}
+                  name="md-close"
+                  color="black"
+                  size={35}
+                />
               </TouchableOpacity>
             </View>
-          </Camera>
+          )}
         </View>
       );
     }
