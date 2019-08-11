@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
@@ -16,12 +17,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
-import { ListItem } from 'react-native-elements';
 import {
   PowerTranslator,
   ProviderTypes,
   TranslatorConfiguration,
-  TranslatorFactory,
 } from 'react-native-power-translator';
 
 // import SwipeCloseImage from 'react-native-swipe-close-image';
@@ -34,8 +33,6 @@ const clarifai = new Clarifai.App({
   apiKey: 'ec193b71319e40fa9568a580e4358a6b',
 });
 process.nextTick = setImmediate;
-
-const key = {};
 
 export default class CameraExample extends React.Component {
   state = {
@@ -81,9 +78,6 @@ export default class CameraExample extends React.Component {
     console.log(photo);
     this.setState({ chosenImage: photo });
     this.setState({ predictions: predictions.outputs[0].data.concepts });
-
-    // const textToTranslate = predictions.outputs[0].data.concepts.join();
-    // this.setState({ output: output });
   };
 
   getPermissionAsync = async () => {
@@ -123,22 +117,15 @@ export default class CameraExample extends React.Component {
   render() {
     TranslatorConfiguration.setConfig(
       ProviderTypes.Google,
-      'AIzaSyB5ip6KC-9KCIjO9Q7Rm47dYJDmOdjLgM0',
-      'fr'
+      'AIzaSyCHMihm_B7TcQjIs6XBixlHKHp0CJKJxD8',
+      'zh-CN'
     );
-
     const { hasCameraPermission, predictions } = this.state;
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
       return (
-        <View
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={styles.noCamera}>
           <StatusBar hidden={true} />
           <Text>No access to camera</Text>
         </View>
@@ -146,7 +133,6 @@ export default class CameraExample extends React.Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
-          {/* Added ref */}
           <StatusBar hidden={true} />
           {!this.state.chosenImage && (
             <Camera
@@ -156,14 +142,7 @@ export default class CameraExample extends React.Component {
               style={{ flex: 1 }}
               type={this.state.type}
             >
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: 'transparent',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                }}
-              >
+              <View style={styles.container}>
                 {/* bottom toolbar */}
                 <Grid style={styles.bottomToolbar}>
                   <Row>
@@ -203,14 +182,8 @@ export default class CameraExample extends React.Component {
           )}
 
           {this.state.chosenImage && (
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {/* <TouchableWithoutFeedback onPress={this.onPressImage}>
+            <View style={styles.resultContainer}>
+              {/* <TouchableWithoutFeedback>
                 <Image
                   ref={c => {
                     this.imageRef = c;
@@ -219,45 +192,28 @@ export default class CameraExample extends React.Component {
                   style={{ width: 300, height: 300 }}
                   resizeMode="contain"
                 />
-              </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback> */}
 
-              <SwipeCloseImage
+              {/*<SwipeCloseImage
                 // eslint-disable-next-line no-return-assign
                 ref={c => (this.swipeToCloseRef = c)}
                 imageSource={this.state.chosenImage}
               /> */}
 
-              <PowerTranslator
-                text={'A Confucian Revival Began'}
-              />
-              <PowerTranslator
-                text={'Author: Confucianism'}
-              />
-
               <FlatList
-                style={{
-                  flex: 1,
-                  textAlign: 'center',
-                  marginTop: '2%',
-                }}
+                style={{ width: '100%' }}
                 data={
-                  predictions.map((prediction, i) => ({
+                  predictions.map(prediction => ({
                     key: `${prediction.name.charAt(0).toUpperCase() +
-                      prediction.name.slice(1)}:
-
-                    `,
+                      prediction.name.slice(1)}`,
                   }))
                   // ${(prediction.value * 100).toFixed(1)}%`}
                 }
                 renderItem={({ item }) => (
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 20,
-                    }}
-                  >
-                    {item.key}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.english}>{item.key}</Text>
+                    <PowerTranslator style={styles.translation} text={`${item.key}`} />
+                  </View>
                 )}
               />
 
