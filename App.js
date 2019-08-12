@@ -4,9 +4,7 @@ import {
   FlatList,
   Text,
   View,
-  Image,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   StatusBar,
   ScrollView,
 } from 'react-native';
@@ -49,12 +47,15 @@ export default class CameraExample extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  // After getting permission to use the camera, code for capturing the photo
   capturePhoto = async () => {
     if (this.camera) {
       let photo = await this.camera.takePictureAsync();
       return photo.uri;
     }
   };
+
+  // Photo resized for optimization
   resize = async photo => {
     let manipulatedImage = await ImageManipulator.manipulateAsync(
       photo,
@@ -63,6 +64,8 @@ export default class CameraExample extends React.Component {
     );
     return manipulatedImage.base64;
   };
+
+  // Get the predictions from Clarifai
   predict = async image => {
     let predictions = await clarifai.models.predict(
       Clarifai.GENERAL_MODEL,
@@ -70,6 +73,7 @@ export default class CameraExample extends React.Component {
     );
     return predictions;
   };
+
   objectDetection = async () => {
     let photo = await this.capturePhoto();
     let resized = await this.resize(photo);
@@ -89,7 +93,7 @@ export default class CameraExample extends React.Component {
     }
   };
 
-  // Function for camera roll
+  // Getting photos for the camera roll
   _pickImage = async () => {
     this.getPermissionAsync();
     let selectedImage = await ImagePicker.launchImageLibraryAsync({
@@ -119,6 +123,8 @@ export default class CameraExample extends React.Component {
   }
 
   render() {
+    // renders the camera and translation results
+
     TranslatorConfiguration.setConfig(
       ProviderTypes.Google,
       'AIzaSyCHMihm_B7TcQjIs6XBixlHKHp0CJKJxD8',
@@ -147,6 +153,7 @@ export default class CameraExample extends React.Component {
               type={this.state.type}
             >
               <View style={styles.container}>
+
                 {/* bottom toolbar */}
                 <Grid style={styles.bottomToolbar}>
                   <Row>
@@ -173,7 +180,7 @@ export default class CameraExample extends React.Component {
                     <Col style={styles.alignCenter}>
                       <TouchableOpacity>
                         <Ionicons
-                          name="food"
+                          name="md-pizza"
                           color="white"
                           size={55}
                         />
@@ -199,6 +206,15 @@ export default class CameraExample extends React.Component {
                 >
                   <Text style={styles.p}>French</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('es');
+                  }}
+                >
+                  <Text style={styles.p}>Spanish</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => {
                     this.changeLanguage('de');
@@ -206,6 +222,7 @@ export default class CameraExample extends React.Component {
                 >
                   <Text style={styles.p}>German</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => {
                     this.changeLanguage('zh-CN');
@@ -213,6 +230,7 @@ export default class CameraExample extends React.Component {
                 >
                   <Text style={styles.p}>Chinese</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => {
                     this.changeLanguage('ko');
@@ -220,23 +238,16 @@ export default class CameraExample extends React.Component {
                 >
                   <Text style={styles.p}>Korean</Text>
                 </TouchableOpacity>
-              </ScrollView>
-              {/* <TouchableWithoutFeedback>
-                <Image
-                  ref={c => {
-                    this.imageRef = c;
-                  }}
-                  source={{ uri: this.state.chosenImage }}
-                  style={{ width: 300, height: 300 }}
-                  resizeMode="contain"
-                />
-              </TouchableWithoutFeedback> */}
 
-              {/*<SwipeCloseImage
-                // eslint-disable-next-line no-return-assign
-                ref={c => (this.swipeToCloseRef = c)}
-                imageSource={this.state.chosenImage}
-              /> */}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('ja');
+                  }}
+                >
+                  <Text style={styles.p}>Japanese</Text>
+                </TouchableOpacity>
+              </ScrollView>
+
 
               <FlatList
                 style={{ width: '100%' }}
