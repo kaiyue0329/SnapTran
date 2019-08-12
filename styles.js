@@ -24,6 +24,18 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#232323',
+  },
+  p: {
+    color: '#828280',
+    lineHeight: 24,
+    fontSize: 15,
+    marginRight: '3%'
+  },
+  languageBar: {
+    marginTop: '3%',
+    paddingVertical: '5%',
+    width: '100%'
   },
   row: {
     flex: 1,
@@ -31,21 +43,20 @@ export default StyleSheet.create({
     paddingHorizontal: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
   },
   translation: {
     fontSize: 20,
     lineHeight: 40,
     fontFamily: 'Avenir',
+    color: 'white',
   },
   english: {
     fontSize: 25,
     lineHeight: 40,
-    // width: 130,
     marginRight: 15,
     fontWeight: 'bold',
     fontFamily: 'Avenir',
+    color: 'white',
   },
   noCamera: {
     flex: 1,

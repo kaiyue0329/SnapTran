@@ -40,8 +40,8 @@ export default class CameraExample extends React.Component {
     type: Camera.Constants.Type.back,
     predictions: [],
     chosenImage: null,
-    language: null,
-    output: null,
+    languageCode: 'fr',
+    generalMode: true,
   };
 
   async componentDidMount() {
@@ -114,11 +114,15 @@ export default class CameraExample extends React.Component {
     });
   };
 
+  changeLanguage(languageCode) {
+    this.setState({ languageCode: languageCode });
+  }
+
   render() {
     TranslatorConfiguration.setConfig(
       ProviderTypes.Google,
       'AIzaSyCHMihm_B7TcQjIs6XBixlHKHp0CJKJxD8',
-      'zh-CN'
+      this.state.languageCode
     );
     const { hasCameraPermission, predictions } = this.state;
     if (hasCameraPermission === null) {
@@ -169,7 +173,7 @@ export default class CameraExample extends React.Component {
                     <Col style={styles.alignCenter}>
                       <TouchableOpacity>
                         <Ionicons
-                          name="md-reverse-camera"
+                          name="food"
                           color="white"
                           size={55}
                         />
@@ -183,6 +187,40 @@ export default class CameraExample extends React.Component {
 
           {this.state.chosenImage && (
             <View style={styles.resultContainer}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.languageBar}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('fr');
+                  }}
+                >
+                  <Text style={styles.p}>French</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('de');
+                  }}
+                >
+                  <Text style={styles.p}>German</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('zh-CN');
+                  }}
+                >
+                  <Text style={styles.p}>Chinese</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeLanguage('ko');
+                  }}
+                >
+                  <Text style={styles.p}>Korean</Text>
+                </TouchableOpacity>
+              </ScrollView>
               {/* <TouchableWithoutFeedback>
                 <Image
                   ref={c => {
@@ -212,7 +250,10 @@ export default class CameraExample extends React.Component {
                 renderItem={({ item }) => (
                   <View style={styles.row}>
                     <Text style={styles.english}>{item.key}</Text>
-                    <PowerTranslator style={styles.translation} text={`${item.key}`} />
+                    <PowerTranslator
+                      style={styles.translation}
+                      text={`${item.key}`}
+                    />
                   </View>
                 )}
               />
@@ -221,7 +262,7 @@ export default class CameraExample extends React.Component {
                 <Ionicons
                   onPress={this.closeWindow}
                   name="md-close"
-                  color="black"
+                  color="white"
                   size={35}
                 />
               </TouchableOpacity>
