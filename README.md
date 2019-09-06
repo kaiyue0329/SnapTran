@@ -28,8 +28,8 @@ Open Expo Client on your device. Use it to scan the QR code printed by `expo sta
 
 ## Built With
 
-* [React Native] (https://facebook.github.io/react-native/) - Front end framework for developing our mobile app
-* [Clarifai] (https://www.clarifai.com/) - Image recognition API used for quickly adding foods using camera
+* [React Native] (https://facebook.github.io/react-native/) - Front end framework for developing the mobile app
+* [Clarifai] (https://www.clarifai.com/) - Image recognition API used for recognizing objects and moods using camera
 * [Google Translate API] (https://cloud.google.com/translate/) - API used for translating between languages
 
 ## Authors
