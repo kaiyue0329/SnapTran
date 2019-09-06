@@ -16,7 +16,7 @@ A visual translation mobile application that uses deep learning and image classi
 4) Copy and paste the following line, filling in the info for Clarifai
 ```
 export const clarifaiKey = 'your key here'
-expot const googleApiKey = 'your key here'
+export const googleApiKey = 'your key here'
 ```
 5) `npm install`
  
