@@ -20,7 +20,7 @@ import {
   ProviderTypes,
   TranslatorConfiguration,
 } from 'react-native-power-translator';
-import { clarifaiKey, googleApiKey } from './secret';
+import { clarifaiKey, googleApiKey } from './secrets';
 
 import styles from './styles';
 
