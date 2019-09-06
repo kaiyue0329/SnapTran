@@ -8,11 +8,16 @@ An e-commerce web application that includes a wide range of features such as fil
 
 ## Getting Started
 
-**Fork** and clone this repository. Then download NodeJS and execute the following:
-
-```bash
-npm install
+**Fork** and clone this repository. Then 
+ 1) Download NodeJS
+ 2) Visit https://www.clarifai.com/ and register for a free API key
+ 3) Create a file in the top level of your directory, name it secret.js
+ 4) Copy and paste the following line, filling in the info for Clarifai
 ```
+export const clarifaiKey = 'your key here'
+```
+ 5) npm install
+ 
 ## Start
 
 Running `expo start` will make great things happen!
