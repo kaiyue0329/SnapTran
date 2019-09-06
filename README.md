@@ -1,6 +1,6 @@
 # SnapTran
 
-An e-commerce web application that includes a wide range of features such as filtering, route access restriction and orders management. Session persistence is also implemented for the cart
+A visual translation mobile application that uses deep learning and image classification technology to recognize the different objects in a photo and translate them into 4 different languages
 
 ### Prerequisites
 
