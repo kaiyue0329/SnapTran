@@ -5,18 +5,20 @@ An e-commerce web application that includes a wide range of features such as fil
 ### Prerequisites
 
   * Expo app
+  * Node.js
 
 ## Getting Started
 
 **Fork** and clone this repository. Then
-1) Download NodeJS
-2) Visit https://www.clarifai.com/ and register for a free API key
+1) Visit https://www.clarifai.com/ and register for a free API key
+2) Visit https://developers.google.com/places/web-service/get-api-key for instructions to get a Google API Key
 3) Create a file in the top level of your directory, name it secret.js
 4) Copy and paste the following line, filling in the info for Clarifai
 ```
 export const clarifaiKey = 'your key here'
+expot const googleApiKey = 'your key here'
 ```
-5) npm install
+5) `npm install`
  
 ## Start
 
@@ -26,10 +28,9 @@ Open Expo Client on your device. Use it to scan the QR code printed by `expo sta
 
 ## Built With
 
-* React Native
-* Expo
-* Clarifai API
-* Google Translate API
+* [React Native] (https://facebook.github.io/react-native/) - Front end framework for developing our mobile app
+* [Clarifai] (https://www.clarifai.com/) - Image recognition API used for quickly adding foods using camera
+* [Google Translate API] (https://cloud.google.com/translate/) - API used for translating between languages
 
 ## Authors
 
