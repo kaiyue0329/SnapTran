@@ -13,7 +13,7 @@ npm install
 
 Running `expo start` will make great things happen!
 
-Open Expo Client on your device. Use it to scan the QR code printed by expo start. You may have to wait a minute while your project bundles and loads for the first time.
+Open Expo Client on your device. Use it to scan the QR code printed by `expo start`. You may have to wait a minute while your project bundles and loads for the first time.
 
 ## Built With
 
