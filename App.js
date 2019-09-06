@@ -20,15 +20,14 @@ import {
   ProviderTypes,
   TranslatorConfiguration,
 } from 'react-native-power-translator';
-
-// import SwipeCloseImage from 'react-native-swipe-close-image';
+import { clarifaiKey, googleApiKey } from './secret';
 
 import styles from './styles';
 
 const Clarifai = require('clarifai');
 
 const clarifai = new Clarifai.App({
-  apiKey: 'ec193b71319e40fa9568a580e4358a6b',
+  apiKey: clarifaiKey,
 });
 process.nextTick = setImmediate;
 
@@ -39,7 +38,6 @@ export default class CameraExample extends React.Component {
     predictions: [],
     chosenImage: null,
     languageCode: 'fr',
-    generalMode: true,
   };
 
   async componentDidMount() {
@@ -127,7 +125,7 @@ export default class CameraExample extends React.Component {
 
     TranslatorConfiguration.setConfig(
       ProviderTypes.Google,
-      'AIzaSyCHMihm_B7TcQjIs6XBixlHKHp0CJKJxD8',
+      googleApiKey,
       this.state.languageCode
     );
     const { hasCameraPermission, predictions } = this.state;
@@ -153,7 +151,6 @@ export default class CameraExample extends React.Component {
               type={this.state.type}
             >
               <View style={styles.container}>
-
                 {/* bottom toolbar */}
                 <Grid style={styles.bottomToolbar}>
                   <Row>
@@ -179,11 +176,7 @@ export default class CameraExample extends React.Component {
                     </Col>
                     <Col style={styles.alignCenter}>
                       <TouchableOpacity>
-                        <Ionicons
-                          name="md-pizza"
-                          color="white"
-                          size={55}
-                        />
+                        <Ionicons name="md-pizza" color="white" size={55} />
                       </TouchableOpacity>
                     </Col>
                   </Row>
@@ -247,7 +240,6 @@ export default class CameraExample extends React.Component {
                   <Text style={styles.p}>Japanese</Text>
                 </TouchableOpacity>
               </ScrollView>
-
 
               <FlatList
                 style={{ width: '100%' }}
