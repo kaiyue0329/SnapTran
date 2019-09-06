@@ -2,6 +2,10 @@
 
 An e-commerce web application that includes a wide range of features such as filtering, route access restriction and orders management. Session persistence is also implemented for the cart
 
+### Prerequisites
+
+  * Expo app
+
 ## Getting Started
 
 **Fork** and clone this repository. Then download NodeJS and execute the following:
