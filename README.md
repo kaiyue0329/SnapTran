@@ -2,7 +2,7 @@
 
 A visual translation mobile application that uses deep learning and image classification technology to recognize the different objects in a photo and translate them into 4 different languages
 
-**Screencast**: https://youtu.be/8xtcNXKKe4M
+**Demo**: https://youtu.be/8xtcNXKKe4M
 
 ### Prerequisites
 
